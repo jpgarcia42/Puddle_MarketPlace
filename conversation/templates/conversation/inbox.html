@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %} 
+
+{% block title %} Inbox {% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 overflow-hidden">
+        
+        <!-- Header -->
+        <div class="px-8 py-6 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-slate-900">Mensagens</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Tire dúvidas e negocie diretamente com outros usuários</p>
+            </div>
+            <div class="h-8 w-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025 4.486 4.486 0 0 0-.477-3.529C3.06 14.136 2 12.03 2 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Chat List -->
+        <div class="divide-y divide-slate-100">
+            {% for conversation in conversations %}
+                <a href="{% url 'conversation:detail' conversation.id %}" class="block p-6 hover:bg-slate-50/50 transition duration-150 group">
+                    <div class="flex items-center gap-5">
+                        
+                        <!-- Product Image Thumbnail -->
+                        <div class="h-16 w-16 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 relative">
+                            {% if conversation.item.image %}
+                                <img src="{{ conversation.item.image.url }}" alt="{{ conversation.item.name }}" class="h-full w-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-[10px] text-slate-400">Sem foto</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Chat Details -->
+                        <div class="flex-grow min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                {% for member in conversation.members.all %}
+                                    {% if member != request.user %}
+                                        <h3 class="font-bold text-slate-800 text-sm truncate group-hover:text-blue-600 transition-colors">
+                                            {{ member.username }}
+                                        </h3>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-[10px] font-medium text-slate-400">
+                                    {{ conversation.modified_at|date:"d/m/Y H:i" }}
+                                </span>
+                            </div>
+                            
+                            <p class="text-xs font-semibold text-slate-600 mt-1 truncate">
+                                Item: {{ conversation.item.name }}
+                            </p>
+                            
+                            {% if conversation.messages.last %}
+                                <p class="text-xs text-slate-400 mt-1 line-clamp-1 leading-normal">
+                                    {{ conversation.messages.last.content }}
+                                </p>
+                            {% else %}
+                                <p class="text-xs text-slate-300 italic mt-1">Inicie a conversa...</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Chevron -->
+                        <div class="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </div>
+
+                    </div>
+                </a>
+            {% empty %}
+                <div class="p-16 text-center">
+                    <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto text-slate-400 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-slate-700 text-sm">Nenhuma conversa encontrada</h3>
+                    <p class="text-xs text-slate-400 mt-1">Quando você ou compradores entrarem em contato sobre itens, as mensagens aparecerão aqui.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

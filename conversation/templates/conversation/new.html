@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %} 
+
+{% block title %} Nova Conversa {% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto my-6 p-6 bg-white rounded-xl shadow-md border border-gray-100">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">Nova Conversa</h1>
+    
+    <form method="post" action="." class="space-y-6">
+        {% csrf_token %}
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Sua Mensagem:</label>
+                {{ form.content }}
+            </div>
+        </div>
+
+        {% if form.errors or form.non_field_errors %}
+            <div class="mb-3 text-red-500 text-sm space-y-1">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    
+        <button type="submit" class="w-full py-3 bg-teal-500 text-white font-semibold rounded-xl hover:bg-teal-600 transition duration-200">
+            Enviar
+        </button>
+    </form>
+</div>
+{% endblock %}

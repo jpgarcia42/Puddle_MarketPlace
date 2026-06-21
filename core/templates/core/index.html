@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %} 
+{% block title %} O seu novo espaço para compras e vendas {% endblock %} 
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-to-br from-blue-50/50 via-white to-slate-50 border-b border-slate-100 overflow-hidden py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+      O maior marketplace universitário da região
+    </span>
+    
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-4xl mx-auto mb-6">
+      Encontre tudo o que precisa, <br class="hidden sm:inline" />
+      <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">compre e venda hoje mesmo.</span>
+    </h1>
+    
+    <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+      Navegue por categorias exclusivas, negocie diretamente com vendedores confiáveis e garanta as melhores ofertas da comunidade local.
+    </p>
+
+    <!-- Search Form -->
+    <div class="max-w-2xl mx-auto">
+      <form method="get" action="{% url 'item:items' %}" class="flex flex-col sm:flex-row gap-2.5 p-2 bg-white rounded-2xl shadow-xl shadow-slate-100 border border-slate-100">
+        <div class="flex-grow flex items-center px-3 gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.637 10.637Z" />
+          </svg>
+          <input type="text" name="query" placeholder="O que você está procurando hoje?" class="w-full py-3 text-sm text-slate-800 placeholder-slate-400 outline-none bg-transparent" />
+        </div>
+        <button type="submit" class="px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-150 shadow-md shadow-blue-600/10">
+          Buscar ofertas
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Hero background decorative circles -->
+  <div class="absolute top-1/2 left-0 -translate-y-1/2 w-72 h-72 bg-blue-400/5 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-400/5 rounded-full blur-3xl pointer-events-none"></div>
+</section>
+
+<!-- Categories Section -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="flex items-end justify-between mb-8">
+    <div>
+      <h2 class="text-2xl font-bold text-slate-900">Categorias em destaque</h2>
+      <p class="text-sm text-slate-500 mt-1">Explore produtos organizados por interesses</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    {% for category in categories %}
+      <a href="{% url 'item:items' %}?category_id={{ category.id }}" class="group bg-white p-5 rounded-2xl border border-slate-100 hover:border-blue-100 hover:shadow-lg hover:shadow-slate-100/50 transition-all duration-300 flex flex-col justify-between h-32">
+        <div class="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 group-hover:text-blue-600 transition-colors text-sm truncate">{{ category.name }}</h3>
+          <p class="text-xs text-slate-400 mt-0.5">{{ category.item_set.count }} anúncios</p>
+        </div>
+      </a>
+    {% empty %}
+      <div class="col-span-full py-8 text-center text-slate-400">
+        Nenhuma categoria cadastrada.
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Latest Items Section -->
+<section class="bg-slate-50 border-t border-slate-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Novidades recentes</h2>
+        <p class="text-sm text-slate-500 mt-1">Os últimos itens anunciados que ainda estão disponíveis</p>
+      </div>
+      <a href="{% url 'item:items' %}" class="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+        Ver todos os anúncios
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for item in items %}
+        <div class="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
+          <!-- Item Image -->
+          <div class="relative overflow-hidden aspect-[4/3] bg-slate-100">
+            {% if item.image %}
+              <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center text-slate-300">
+                Sem imagem
+              </div>
+            {% endif %}
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-600 shadow-sm">
+              {{ item.category.name }}
+            </span>
+          </div>
+
+          <!-- Item Details -->
+          <div class="p-5 flex flex-col justify-between flex-grow">
+            <div>
+              <a href="{% url 'item:detail' item.id %}" class="block group-hover:text-blue-600 transition-colors">
+                <h3 class="font-bold text-slate-800 text-base line-clamp-1 mb-1">{{ item.name }}</h3>
+              </a>
+              <p class="text-xs text-slate-400 mb-4 line-clamp-2 leading-relaxed">{{ item.description|default:"Sem descrição adicional." }}</p>
+            </div>
+            
+            <div class="flex items-center justify-between pt-3 border-t border-slate-50">
+              <span class="text-lg font-extrabold text-blue-600">R$ {{ item.price }}</span>
+              <a href="{% url 'item:detail' item.id %}" class="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-50 text-slate-700 hover:bg-blue-600 hover:text-white transition-all duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-span-full py-12 text-center text-slate-400">
+          Nenhum item disponível no momento. Seja o primeiro a criar um anúncio!
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
